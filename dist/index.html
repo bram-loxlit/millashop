@@ -17,7 +17,6 @@
     
     
       
-        @media (prefers-reduced-motion: no-preference) {
           @view-transition {
             navigation: auto;
           }
@@ -43,7 +42,8 @@
     
 
     
-  </head>
+  <link rel="stylesheet" href="assets/assets/base.css">
+</head>
 
   <body class="page-width- card-hover-effect-">
     
@@ -106,9 +106,7 @@
             return;
           }
 
-          const hasImmediateSection = hasHeaderSection.nextElementSibling?.classList.contains('shopify-section');
 
-          const shouldApplyOffset = !hasImmediateSection ? '1' : '0';
           document.body.style.setProperty('--transparent-header-offset-boolean', shouldApplyOffset);
         })();
 
@@ -132,20 +130,15 @@
         data-template=""
       >
         
-<!-- SECTION: hero -->
-
 
 
 
 
   
-     Both desktop and mobile are images. Assume similar images, and this is art direction: use picture element. 
     <picture
       data-testid="hero-picture-1"
-      class="hero__media"
     >
       <source
-        media="(max-width: 749px)"
         srcset="
           
              w,
@@ -169,7 +162,6 @@
     </div>
   
 
-   Mobile-only slot 1 media (when desktop is different type) 
   
     
       <div class="">
@@ -187,13 +179,10 @@
 
 
   
-     Both desktop and mobile are images. Assume this is art direction: use picture element.  
     <picture
-      class="hero__media"
       data-testid="hero-picture-2"
     >
       <source
-        media="(max-width: 749px)"
         srcset="
           
              w,
@@ -217,7 +206,6 @@
     </div>
   
 
-   Mobile-only slot 2 media (when desktop is different type) 
   
     
       <div class="">
@@ -257,8 +245,6 @@
 
   
     On mobile we need to check:
-    1. If the media should be stacked. If it is,we check for the second (bottom) image first, then for the first (top) image.
-    2. If custom mobile setting is active and has media (show desktop media otherwise).
   
   
     
@@ -353,9 +339,6 @@
       ></a>
     
     <div
-      class="hero__media-grid"
-      style="--hero-media-count: ;--hero-media-count-mobile: ; --hero-media-aspect-ratio: ;"
-      data-testid="hero-media-wrapper"
     >
       
       
@@ -380,8 +363,6 @@
 
 
 
-
-<!-- SECTION: product-list -->
 
 
 
@@ -419,7 +400,7 @@
           </div>
 
           
-            <!--@list/split-->
+            
           
         
       
@@ -432,7 +413,7 @@
         </div>
 
         
-          <!--@list/split-->
+          
         
       
     
