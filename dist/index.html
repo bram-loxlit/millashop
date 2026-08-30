@@ -1,452 +1,60 @@
-<!doctype html>
-<html
-  
-    class="shopify-design-mode"
-  
-  lang=""
->
-  <head>
-    
-      <link
-        rel="icon"
-        type="image/png"
-        href=""
-      >
-    
-
-    
-    
-      
-          @view-transition {
-            navigation: auto;
-          }
-        }
-      
-      <link
-        rel="expect"
-        href="#MainContent"
-        blocking="render"
-        id="view-transition-render-blocker"
-      >
-    
-
-    
-    
-    
-    
-    
-    
-
-    
-      
-    
-
-    
-  <link rel="stylesheet" href="assets/assets/base.css">
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Milla Rhode</title>
+  <link rel="stylesheet" href="assets/base.css">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f8f9fa;
+      color: #333;
+      text-align: center;
+    }
+    .card {
+      background: #ffffff;
+      padding: 3rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      max-width: 480px;
+      width: 90%;
+    }
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+    p {
+      font-size: 1.1rem;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      background-color: #e9ecef;
+      color: #495057;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  </style>
 </head>
-
-  <body class="page-width- card-hover-effect-">
-    
-
-    
-
-    <div class="page-wrapper">
-      <div id="header-group">
-        
-      </div>
-
-      <script>
-        // Inline header height and menu style calculations to prevent layout shift
-        // Note: Updates in calculateHeaderGroupHeight(), updateTransparentHeaderOffset() and setHeaderMenuStyle() utilities.js should be kept in sync with this function
-        (function setHeaderHeighCustomProperties() {
-          /*
-           * Header calculation functions for maintaining CSS variables
-           * Mimic calculateHeaderGroupHeight() in utilities.js
-           */
-          const header = document.querySelector('header-component');
-          const headerGroup = document.querySelector('#header-group');
-          const hasHeaderSection = headerGroup?.querySelector('.header-section');
-
-          if (!header || !headerGroup) return;
-
-          const headerTopRow = header.querySelector('.header__row--top');
-          const headerHeight = header.offsetHeight;
-
-          // Calculate the total height of the header group
-          let headerGroupHeight = 0;
-          const children = headerGroup.children;
-          for (let i = 0; i < children.length; i++) {
-            const element = children[i];
-            if (element === header || !(element instanceof HTMLElement)) continue;
-            headerGroupHeight += element.offsetHeight;
-          }
-
-          // Check for transparent header special case
-          if (header.hasAttribute('transparent') && header.parentElement?.nextElementSibling) {
-            headerGroupHeight += headerHeight;
-          }
-
-          // Set CSS variables
-          document.body.style.setProperty('--header-height', `${headerHeight}px`);
-          document.body.style.setProperty('--header-group-height', `${headerGroupHeight}px`);
-
-          if (headerTopRow) {
-            window.requestAnimationFrame(function () {
-              document.body.style.setProperty('--top-row-height', `${headerTopRow.offsetHeight}px`);
-            });
-          }
-
-          /**
-           * Updates CSS custom properties for transparent header offset calculation
-           * Mimic updateTransparentHeaderOffset() in utilities.js
-           */
-
-          if (!hasHeaderSection || !header?.hasAttribute('transparent')) {
-            document.body.style.setProperty('--transparent-header-offset-boolean', '0');
-            return;
-          }
-
-
-          document.body.style.setProperty('--transparent-header-offset-boolean', shouldApplyOffset);
-        })();
-
-        (function setHeaderMenuStyle() {
-          const headerComponent = document.querySelector('#header-component');
-          if (headerComponent) {
-            const isTouchDevice = 'ontouchstart' in window && navigator.maxTouchPoints > 0;
-            const overflowList = headerComponent?.querySelector('overflow-list');
-            const hasReachedMinimum = overflowList && overflowList.hasAttribute('minimum-reached');
-            headerComponent.dataset.menuStyle = isTouchDevice || hasReachedMinimum ? 'drawer' : 'menu';
-          }
-        })();
-      </script>
-
-      <main
-        id="MainContent"
-        class="content-for-layout"
-        role="main"
-        data-page-transition-enabled=""
-        data-product-transition=""
-        data-template=""
-      >
-        
-
-
-
-
-  
-    <picture
-      data-testid="hero-picture-1"
-    >
-      <source
-        srcset="
-          
-             w,
-          
-        "
-        sizes=""
-        width=""
-        height=""
-      >
-      
-    </picture>
-  
-    <div class="">
-      
-    </div>
-  
-
-  
-    <div class="">
-      
-    </div>
-  
-
-  
-    
-      <div class="">
-        
-      </div>
-    
-
-    
-      <div class="">
-        
-      </div>
-    
-  
-
-
-
-  
-    <picture
-      data-testid="hero-picture-2"
-    >
-      <source
-        srcset="
-          
-             w,
-          
-        "
-        sizes=""
-        width=""
-        height=""
-      >
-      
-    </picture>
-  
-    <div class="">
-      
-    </div>
-  
-
-  
-    <div class="">
-      
-    </div>
-  
-
-  
-    
-      <div class="">
-        
-      </div>
-    
-
-    
-      <div class="">
-        
-      </div>
-    
-  
-
-
-
-  
-  
-
-  
-    
-  
-
-
-
-  
-    
-  
-  
-    
-  
-  
-    
-  
-
-
-
-  
-    On mobile we need to check:
-  
-  
-    
-      
-        
-      
-      
-        
-      
-    
-      
-    
-  
-    
-      
-        
-      
-        
-      
-    
-      
-        
-          
-        
-          
-        
-        
-          
-        
-      
-    
-  
-
-
-
-
-<div
-  id="Hero-"
-  class="hero color-custom- hero--no-blocks-auto-height hero--stack-mobile"
-  style="
-    --hero-border-style: ;
-    --hero-border-width: px;
-    --hero-border-opacity: %;
-    --blur-opacity: ;
-    
-      --hero-min-height: svh;
-    
-       --hero-min-height: 100svh;
-    
-      --hero-min-height: var(--section-height-);
-    
-  "
-  
-    data-shopify-visual-preview
-  
-  
-    data-blur-shadow="true"
-  
->
-  
-    
-      <div
-        class="hero__blurred-image hero__blurred-image--desktop"
-        data-testid="hero-blurred-image-desktop"
-      >
-        
-      </div>
-    
-    
-      <div
-        class="hero__blurred-image hero__blurred-image--mobile"
-        data-testid="hero-blurred-image-mobile"
-      >
-        
-      </div>
-    
-  
-
-  
-
-  <div
-    class="hero__container spacing-style section section--full-width"
-    style=""
-  >
-    
-      <a
-        href=""
-        class="hero__link"
-        
-          target="_blank" rel="noopener"
-        
-      ></a>
-    
-    <div
-    >
-      
-      
-    </div>
-    <div
-      class="
-        hero__content-wrapper
-        layout-panel-flex
-        layout-panel-flex--
-        mobile-column
-        section-content-wrapper
-        
-        hero__content-wrapper--design-mode
-      "
-      style=""
-    >
-      
-    </div>
+<body>
+  <div class="card">
+    <span class="badge">Binnenkort Vernieuwd</span>
+    <h1>Milla Rhode</h1>
+    <p>Onze vernieuwde webshop is momenteel onder constructie. Binnenkort staan we weer voor je klaar met onze nieuwste collectie!</p>
   </div>
-</div>
-
-
-
-
-
-
-
-
-<div
-  class="section-background color-custom-"
-></div>
-<div
-  data-testid="product-list"
-  class="
-    section
-    section--
-    color-custom-
-    section-resource-list
-    spacing-style
-    gap-style
-  "
-  style="
-    
-    
-  "
->
-  <div class="section-resource-list__header">
-    
-  </div>
-
-  
-    
-      
-        
-        <div
-          class="resource-list__item"
-        >
-            
-          </div>
-
-          
-            
-          
-        
-      
-    
-      
-        <div
-          class="resource-list__item"
-        >
-            
-        </div>
-
-        
-          
-        
-      
-    
-  
-
-  
-
-  
-
-  <div
-    class="section-resource-list__content"
-    style="--horizontal-alignment: ;"
-  >
-    
-  </div>
-</div>
-
-
-
-      </main>
-
-      <footer>
-        
-      </footer>
-    </div>
-
-    
-    
-
-    
-
-    
-      
-    
-  </body>
+</body>
 </html>
