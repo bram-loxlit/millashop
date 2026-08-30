@@ -1,0 +1,791 @@
+<!doctype html>
+<html
+  
+    class="shopify-design-mode"
+  
+  lang=""
+>
+  <head>
+    
+      <link
+        rel="icon"
+        type="image/png"
+        href=""
+      >
+    
+
+    
+    
+      
+        @media (prefers-reduced-motion: no-preference) {
+          @view-transition {
+            navigation: auto;
+          }
+        }
+      
+      <link
+        rel="expect"
+        href="#MainContent"
+        blocking="render"
+        id="view-transition-render-blocker"
+      >
+    
+
+    
+    
+    
+    
+    
+    
+
+    
+      
+    
+
+    
+  </head>
+
+  <body class="page-width- card-hover-effect-">
+    
+
+    
+
+    <div class="page-wrapper">
+      <div id="header-group">
+        
+      </div>
+
+      <script>
+        // Inline header height and menu style calculations to prevent layout shift
+        // Note: Updates in calculateHeaderGroupHeight(), updateTransparentHeaderOffset() and setHeaderMenuStyle() utilities.js should be kept in sync with this function
+        (function setHeaderHeighCustomProperties() {
+          /*
+           * Header calculation functions for maintaining CSS variables
+           * Mimic calculateHeaderGroupHeight() in utilities.js
+           */
+          const header = document.querySelector('header-component');
+          const headerGroup = document.querySelector('#header-group');
+          const hasHeaderSection = headerGroup?.querySelector('.header-section');
+
+          if (!header || !headerGroup) return;
+
+          const headerTopRow = header.querySelector('.header__row--top');
+          const headerHeight = header.offsetHeight;
+
+          // Calculate the total height of the header group
+          let headerGroupHeight = 0;
+          const children = headerGroup.children;
+          for (let i = 0; i < children.length; i++) {
+            const element = children[i];
+            if (element === header || !(element instanceof HTMLElement)) continue;
+            headerGroupHeight += element.offsetHeight;
+          }
+
+          // Check for transparent header special case
+          if (header.hasAttribute('transparent') && header.parentElement?.nextElementSibling) {
+            headerGroupHeight += headerHeight;
+          }
+
+          // Set CSS variables
+          document.body.style.setProperty('--header-height', `${headerHeight}px`);
+          document.body.style.setProperty('--header-group-height', `${headerGroupHeight}px`);
+
+          if (headerTopRow) {
+            window.requestAnimationFrame(function () {
+              document.body.style.setProperty('--top-row-height', `${headerTopRow.offsetHeight}px`);
+            });
+          }
+
+          /**
+           * Updates CSS custom properties for transparent header offset calculation
+           * Mimic updateTransparentHeaderOffset() in utilities.js
+           */
+
+          if (!hasHeaderSection || !header?.hasAttribute('transparent')) {
+            document.body.style.setProperty('--transparent-header-offset-boolean', '0');
+            return;
+          }
+
+          const hasImmediateSection = hasHeaderSection.nextElementSibling?.classList.contains('shopify-section');
+
+          const shouldApplyOffset = !hasImmediateSection ? '1' : '0';
+          document.body.style.setProperty('--transparent-header-offset-boolean', shouldApplyOffset);
+        })();
+
+        (function setHeaderMenuStyle() {
+          const headerComponent = document.querySelector('#header-component');
+          if (headerComponent) {
+            const isTouchDevice = 'ontouchstart' in window && navigator.maxTouchPoints > 0;
+            const overflowList = headerComponent?.querySelector('overflow-list');
+            const hasReachedMinimum = overflowList && overflowList.hasAttribute('minimum-reached');
+            headerComponent.dataset.menuStyle = isTouchDevice || hasReachedMinimum ? 'drawer' : 'menu';
+          }
+        })();
+      </script>
+
+      <main
+        id="MainContent"
+        class="content-for-layout"
+        role="main"
+        data-page-transition-enabled=""
+        data-product-transition=""
+        data-template=""
+      >
+        
+<!-- SECTION: hero -->
+
+
+{% liquid
+  assign media_count = 0
+  assign media_count_mobile = 0
+  assign fallback_to_desktop = false
+  assign media_1 = 'none'
+  assign media_2 = 'none'
+  assign media_1_mobile = 'none'
+  assign media_2_mobile = 'none'
+  assign has_only_video = false
+  assign has_only_video_mobile = false
+
+  # Desktop media checks
+  # For each media slot, check if the media is not blank and the media type matches the slot
+  # Need to check both (1) media picker is not blank AND (2) section.setting.media_type because user can toggle between different media types to display, but choosing "Image" doesn't clear a saved "Video" in the theme editor.
+  # The alternate setting (section.settings.image_1 when "Video" is selected) is only visually hidden in theme editor.
+  if section.settings.image_1 != blank and section.settings.media_type_1 == 'image'
+    assign media_1 = 'image'
+    assign media_count = media_count | plus: 1
+  endif
+  if section.settings.video_1 != blank and section.settings.media_type_1 == 'video'
+    assign media_1 = 'video'
+    assign media_count = media_count | plus: 1
+  endif
+  if section.settings.image_2 != blank and section.settings.media_type_2 == 'image'
+    assign media_2 = 'image'
+    assign media_count = media_count | plus: 1
+  endif
+  if section.settings.video_2 != blank and section.settings.media_type_2 == 'video'
+    assign media_2 = 'video'
+    assign media_count = media_count | plus: 1
+  endif
+
+  if section.settings.custom_mobile_media
+    # Mobile media checks
+    # For each media slot, check if the media is not blank and the media type matches the slot
+    if section.settings.image_1_mobile != blank and section.settings.media_type_1_mobile == 'image'
+      assign media_1_mobile = 'image'
+      assign media_count_mobile = media_count_mobile | plus: 1
+    endif
+    if section.settings.video_1_mobile != blank and section.settings.media_type_1_mobile == 'video'
+      assign media_1_mobile = 'video'
+      assign media_count_mobile = media_count_mobile | plus: 1
+    endif
+    if section.settings.image_2_mobile != blank and section.settings.media_type_2_mobile == 'image'
+      assign media_2_mobile = 'image'
+      assign media_count_mobile = media_count_mobile | plus: 1
+    endif
+    if section.settings.video_2_mobile != blank and section.settings.media_type_2_mobile == 'video'
+      assign media_2_mobile = 'video'
+      assign media_count_mobile = media_count_mobile | plus: 1
+    endif
+  endif
+  if media_count > 0 and media_1 != 'image' and media_2 != 'image'
+    assign has_only_video = true
+  endif
+  if media_count > 0 and media_count_mobile > 0 and media_1_mobile != 'image' and media_2_mobile != 'image'
+    assign has_only_video_mobile = true
+  endif
+
+  assign media_wrapper_desktop_class = 'hero__media-wrapper hero__media-wrapper--desktop'
+  assign media_wrapper_mobile_class = 'hero__media-wrapper hero__media-wrapper--mobile'
+  # If there is no custom mobile media to show, we add the mobile class to the desktop classes so content is always shown on mobile.
+  if section.settings.custom_mobile_media == false or section.settings.custom_mobile_media == true and media_count_mobile == 0
+    assign media_wrapper_desktop_class = media_wrapper_desktop_class | append: ' hero__media-wrapper--mobile'
+  endif
+
+  # Should we show the blurred reflection on mobile?
+  assign show_mobile_blurred_reflection = false
+  if section.settings.blurred_reflection
+    if section.settings.custom_mobile_media == true and media_count_mobile > 0 and has_only_video_mobile == false
+      # Custom mobile media is active and a mobile image is present
+      assign show_mobile_blurred_reflection = true
+    elsif section.settings.custom_mobile_media == true and media_count_mobile == 0 and media_count > 0 and has_only_video == false
+      # Custom mobile media is active, no mobile media is present, but a desktop image is present
+      assign show_mobile_blurred_reflection = true
+    elsif section.settings.custom_mobile_media == false and media_count > 0 and has_only_video == false
+      # Custom mobile media is inactive, but a desktop image is present
+      assign show_mobile_blurred_reflection = true
+    endif
+  endif
+
+  if media_1 == 'image' and media_2 == 'image'
+    assign media_width_desktop = '50vw'
+  else
+    assign media_width_desktop = '100vw'
+  endif
+
+  # If custom mobile media is disabled or no mobile media is present, we need to fallback to desktop media.
+  if section.settings.custom_mobile_media == false or media_count_mobile == 0 or media_count == 0
+    assign media_count_mobile = media_count
+    assign fallback_to_desktop = true
+  endif
+
+  if fallback_to_desktop
+    assign media_width_mobile = media_width_desktop
+  elsif section.settings.stack_media_on_mobile or media_1_mobile != 'image' or media_2_mobile != 'image'
+    assign media_width_mobile = '100vw'
+  else
+    assign media_width_mobile = '50vw'
+  endif
+
+  assign sizes = '(min-width: 750px) ' | append: media_width_desktop | append: ', ' | append: media_width_mobile
+  assign widths = '832, 1200, 1600, 1920, 2560, 3840'
+  assign sizes_mobile = media_width_mobile
+  assign mobile_widths = '416, 600, 800, 1200, 1600'
+  assign mobile_widths_array = mobile_widths | split: ', '
+
+  assign fetch_priority = 'auto'
+
+  if section.index == 1
+    assign fetch_priority = 'high'
+  endif
+%}
+
+
+  
+     Both desktop and mobile are images. Assume similar images, and this is art direction: use picture element. 
+    <picture
+      data-testid="hero-picture-1"
+      class="hero__media"
+    >
+      <source
+        media="(max-width: 749px)"
+        srcset="
+          
+             w,
+          
+        "
+        sizes=""
+        width=""
+        height=""
+      >
+      {{
+        section.settings.image_1
+        | image_url: width: 3840
+        | image_tag:
+          width: section.settings.image_1.width,
+          widths: widths,
+          height: section.settings.image_1.height,
+          alt: section.settings.image_1.alt,
+          class: 'hero__media',
+          sizes: sizes,
+          fetchpriority: fetch_priority,
+          data-testid: 'hero-desktop-image-1'
+      }}
+    </picture>
+  
+    <div class="">
+      {{
+        section.settings.image_1
+        | image_url: width: 3840
+        | image_tag:
+          width: section.settings.image_1.width,
+          widths: widths,
+          height: section.settings.image_1.height,
+          alt: section.settings.image_1.alt,
+          class: 'hero__media',
+          sizes: sizes,
+          fetchpriority: fetch_priority,
+          data-testid: 'hero-desktop-image-1'
+      }}
+    </div>
+  
+
+  
+    <div class="">
+      {{
+        section.settings.video_1
+        | video_tag:
+          poster: nil,
+          autoplay: true,
+          loop: true,
+          controls: false,
+          muted: true,
+          class: 'hero__media',
+          data-testid: 'hero-desktop-video-1'
+      }}
+    </div>
+  
+
+   Mobile-only slot 1 media (when desktop is different type) 
+  
+    
+      <div class="">
+        {{
+          section.settings.image_1_mobile
+          | image_url: width: 1600
+          | image_tag:
+            width: section.settings.image_1_mobile.width,
+            widths: mobile_widths,
+            height: section.settings.image_1_mobile.height,
+            alt: section.settings.image_1_mobile.alt,
+            class: 'hero__media',
+            sizes: sizes_mobile,
+            fetchpriority: fetch_priority,
+            data-testid: 'hero-mobile-image-1'
+        }}
+      </div>
+    
+
+    
+      <div class="">
+        {{
+          section.settings.video_1_mobile
+          | video_tag:
+            poster: nil,
+            autoplay: true,
+            loop: true,
+            controls: false,
+            muted: true,
+            class: 'hero__media',
+            data-testid: 'hero-mobile-video-1'
+        }}
+      </div>
+    
+  
+
+
+
+  
+     Both desktop and mobile are images. Assume this is art direction: use picture element.  
+    <picture
+      class="hero__media"
+      data-testid="hero-picture-2"
+    >
+      <source
+        media="(max-width: 749px)"
+        srcset="
+          
+             w,
+          
+        "
+        sizes=""
+        width=""
+        height=""
+      >
+      {{
+        section.settings.image_2
+        | image_url: width: 3840
+        | image_tag:
+          width: section.settings.image_2.width,
+          widths: widths,
+          height: section.settings.image_2.height,
+          alt: section.settings.image_2.alt,
+          class: 'hero__media',
+          sizes: sizes,
+          fetchpriority: fetch_priority,
+          data-testid: 'hero-desktop-image-2'
+      }}
+    </picture>
+  
+    <div class="">
+      {{
+        section.settings.image_2
+        | image_url: width: 3840
+        | image_tag:
+          width: section.settings.image_2.width,
+          widths: widths,
+          height: section.settings.image_2.height,
+          alt: section.settings.image_2.alt,
+          class: 'hero__media',
+          sizes: sizes,
+          fetchpriority: fetch_priority,
+          data-testid: 'hero-desktop-image-2'
+      }}
+    </div>
+  
+
+  
+    <div class="">
+      {{
+        section.settings.video_2
+        | video_tag:
+          poster: nil,
+          autoplay: true,
+          loop: true,
+          controls: false,
+          muted: true,
+          class: 'hero__media',
+          data-testid: 'hero-desktop-video-2'
+      }}
+    </div>
+  
+
+   Mobile-only slot 2 media (when desktop is different type) 
+  
+    
+      <div class="">
+        {{
+          section.settings.image_2_mobile
+          | image_url: width: 1600
+          | image_tag:
+            width: section.settings.image_2_mobile.width,
+            widths: mobile_widths,
+            height: section.settings.image_2_mobile.height,
+            alt: section.settings.image_2_mobile.alt,
+            class: 'hero__media',
+            sizes: sizes_mobile,
+            fetchpriority: fetch_priority,
+            data-testid: 'hero-mobile-image-2'
+        }}
+      </div>
+    
+
+    
+      <div class="">
+        {{
+          section.settings.video_2_mobile
+          | video_tag:
+            poster: nil,
+            autoplay: true,
+            loop: true,
+            controls: false,
+            muted: true,
+            class: 'hero__media',
+            data-testid: 'hero-mobile-video-2'
+        }}
+      </div>
+    
+  
+
+
+
+  
+  
+
+  
+    
+  
+
+
+
+  
+    {{
+      section.settings.image_1
+      | image_url: width: 3840
+      | image_tag:
+        width: section.settings.image_1.width,
+        widths: widths,
+        height: section.settings.image_1.height,
+        alt: '',
+        class: 'hero__media',
+        sizes: sizes
+    }}
+  
+  
+    {{
+      section.settings.image_2
+      | image_url: width: 3840
+      | image_tag:
+        width: section.settings.image_2.width,
+        widths: widths,
+        height: section.settings.image_2.height,
+        alt: '',
+        class: 'hero__media',
+        sizes: sizes
+    }}
+  
+  
+    
+  
+
+
+
+  
+    On mobile we need to check:
+    1. If the media should be stacked. If it is,we check for the second (bottom) image first, then for the first (top) image.
+    2. If custom mobile setting is active and has media (show desktop media otherwise).
+  
+  
+    
+      
+        {{ section.settings.image_1_mobile
+          | image_url: width: 1600
+          | image_tag: width: section.settings.image_1_mobile.width,
+            widths: mobile_widths,
+            height: section.settings.image_1_mobile.height,
+            alt: '',
+            class: 'hero__media',
+            sizes: sizes_mobile
+          }}
+      
+      
+        {{ section.settings.image_2_mobile
+          | image_url: width: 1600
+          | image_tag: width: section.settings.image_2_mobile.width,
+            widths: mobile_widths,
+            height: section.settings.image_2_mobile.height,
+            alt: '',
+            class: 'hero__media',
+            sizes: sizes_mobile
+          }}
+      
+    
+      
+    
+  
+    
+      
+        {{ section.settings.image_2_mobile
+          | image_url: width: 1600
+          | image_tag: width: section.settings.image_2_mobile.width,
+            widths: mobile_widths,
+            height: section.settings.image_2_mobile.height,
+            alt: '',
+            class: 'hero__media',
+            sizes: sizes_mobile
+        }}
+      
+        {{ section.settings.image_1_mobile
+          | image_url: width: 1600
+          | image_tag: width: section.settings.image_1_mobile.width,
+            widths: mobile_widths,
+            height: section.settings.image_1_mobile.height,
+            alt: '',
+            class: 'hero__media',
+            sizes: sizes_mobile
+          }}
+      
+    
+      
+        
+          {{ section.settings.image_2
+            | image_url: width: 1600
+            | image_tag: width: section.settings.image_2.width,
+              widths: widths,
+              height: section.settings.image_2.height,
+              alt: '',
+              class: 'hero__media',
+              sizes: sizes
+            }}
+        
+          {{ section.settings.image_1
+            | image_url: width: 1600
+            | image_tag: width: section.settings.image_1.width,
+              widths: widths,
+              height: section.settings.image_1.height,
+              alt: '',
+              class: 'hero__media',
+              sizes: sizes
+            }}
+        
+        
+          
+        
+      
+    
+  
+
+
+{%- liquid
+  if section.settings.background_color != blank
+    render 'contrast-override', background_color: section.settings.background_color, section_id: section.id, skip_contrast: true
+  endif
+-%}
+
+<div
+  id="Hero-"
+  class="hero color-custom- hero--no-blocks-auto-height hero--stack-mobile"
+  style="
+    --hero-border-style: ;
+    --hero-border-width: px;
+    --hero-border-opacity: %;
+    --blur-opacity: ;
+    
+      --hero-min-height: svh;
+    
+       --hero-min-height: 100svh;
+    
+      --hero-min-height: var(--section-height-);
+    
+  "
+  
+    data-shopify-visual-preview
+  
+  
+    data-blur-shadow="true"
+  
+>
+  
+    
+      <div
+        class="hero__blurred-image hero__blurred-image--desktop"
+        data-testid="hero-blurred-image-desktop"
+      >
+        
+      </div>
+    
+    
+      <div
+        class="hero__blurred-image hero__blurred-image--mobile"
+        data-testid="hero-blurred-image-mobile"
+      >
+        
+      </div>
+    
+  
+
+  
+
+  <div
+    class="hero__container spacing-style section section--full-width"
+    style=""
+  >
+    
+      <a
+        href=""
+        class="hero__link"
+        
+          target="_blank" rel="noopener"
+        
+      ></a>
+    
+    <div
+      class="hero__media-grid"
+      style="--hero-media-count: ;--hero-media-count-mobile: ; --hero-media-aspect-ratio: ;"
+      data-testid="hero-media-wrapper"
+    >
+      {% liquid
+        if section.settings.toggle_overlay
+          render 'overlay', settings: section.settings
+        endif
+      %}
+      
+    </div>
+    <div
+      class="
+        hero__content-wrapper
+        layout-panel-flex
+        layout-panel-flex--
+        mobile-column
+        section-content-wrapper
+        
+        hero__content-wrapper--design-mode
+      "
+      style=""
+    >
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!-- SECTION: product-list -->
+
+
+{% liquid
+  assign max_items = section.settings.max_products
+  if section.settings.background_color != blank
+    render 'contrast-override', background_color: section.settings.background_color, section_id: section.id
+  endif
+%}
+
+<div
+  class="section-background color-custom-"
+></div>
+<div
+  data-testid="product-list"
+  class="
+    section
+    section--
+    color-custom-
+    section-resource-list
+    spacing-style
+    gap-style
+  "
+  style="
+    
+    
+  "
+>
+  <div class="section-resource-list__header">
+    
+  </div>
+
+  
+    
+      
+        
+        <div
+          class="resource-list__item"
+        >
+            {% content_for 'block',
+              type: '_product-card',
+              id: 'static-product-card',
+              closest.product: product,
+              product_view_context: 'collection'
+            %}
+          </div>
+
+          
+            <!--@list/split-->
+          
+        
+      
+    
+      
+        <div
+          class="resource-list__item"
+        >
+            
+        </div>
+
+        
+          <!--@list/split-->
+        
+      
+    
+  
+
+  {% liquid
+    # Create an array from the list items to be used for different layout types
+    assign list_items_array = list_items | strip | split: '<!--@list/split-->'
+  %}
+
+  {% render 'resource-list',
+    list_items: list_items,
+    list_items_array: list_items_array,
+    settings: section.settings,
+    slide_count: max_items,
+    content_type: 'products',
+    test_id: 'resource-list-grid'
+  %}
+
+  <div
+    class="section-resource-list__content"
+    style="--horizontal-alignment: ;"
+  >
+    
+  </div>
+</div>
+
+
+
+      </main>
+
+      <footer>
+        
+      </footer>
+    </div>
+
+    
+    
+
+    
+
+    
+      
+    
+  </body>
+</html>
