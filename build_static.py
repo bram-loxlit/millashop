@@ -2,11 +2,13 @@ import os
 import json
 import re
 
-base_dir = os.path.dirname(os.path.abspath(__file__))
+base_dir = os.path.expanduser('~/ai-workspace/millashop')
+old_shop = os.path.join(base_dir, 'old shop')
 dist_dir = os.path.join(base_dir, 'dist')
-layout_dir = os.path.join(base_dir, 'layout')
-templates_dir = os.path.join(base_dir, 'templates')
-sections_dir = os.path.join(base_dir, 'sections')
+
+layout_dir = os.path.join(old_shop, 'layout')
+templates_dir = os.path.join(old_shop, 'templates')
+sections_dir = os.path.join(old_shop, 'sections')
 
 os.makedirs(dist_dir, exist_ok=True)
 
@@ -43,10 +45,10 @@ if os.path.exists(theme_path):
     content = re.sub(r'\{\%\s*schema\s*\%\}.*?\{\%\s*endschema\s*\%\}', '', content, flags=re.DOTALL)
     content = re.sub(r'\{\%\s*javascript\s*\%\}.*?\{\%\s*endjavascript\s*\%\}', '', content, flags=re.DOTALL)
     content = re.sub(r'\{\%\s*stylesheet\s*\%\}.*?\{\%\s*endstylesheet\s*\%\}', '', content, flags=re.DOTALL)
-    
+
     # Verwijder multi-line Liquid blokken ({% liquid ... %})
     content = re.sub(r'\{\%\s*liquid.*?\%\}', '', content, flags=re.DOTALL)
-    
+
     # Verwijder alle overige inline/multi-line tags en variabelen
     content = re.sub(r'\{\%.*?\%\}', '', content, flags=re.DOTALL)
     content = re.sub(r'\{\{.*?\}\}', '', content, flags=re.DOTALL)
@@ -59,3 +61,4 @@ if os.path.exists(theme_path):
     with open(out_path, 'w', encoding='utf-8') as f:
         f.write(content)
     print("Volledige schone index.html succesvol gegenereerd!")
+
